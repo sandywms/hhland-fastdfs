@@ -1,19 +1,8 @@
-FROM ubuntu:14.04.2
+FROM ubuntu
 
-RUN yum -y install git gcc gcc-c++ cmake automake autoconf libtool make
+MAINTAINER noninteractive
 
-RUN mkdir -p /d/git && mkdir -p /d/var/fastdfs 
-
-RUN cd /d/git && git clone https://github.com/happyfish100/libfastcommon.git
-
-RUN cd /d/git/libfastcommon && ./make.sh && ./make.sh install
-
-RUN cd /d/git && git clone https://github.com/hhland/fastdfs.git
-
-RUN cd /d/git/fastdfs && ./make.sh && ./make.sh install
-
-RUN mkdir /opt/fdfs && cp /usr/share/zoneinfo/Asia/Hong_Kong /etc/localtime
-COPY run.sh /opt/fdfs/
-COPY *.conf /etc/fdfs/
-
-ENTRYPOINT ["/opt/fdfs/run.sh"]
+RUN apt-get clean && apt-get update && apt-get -y install libc6 libc6-dev make gcc libevent-dev libpthread-stubs0-dev
+COPY FastDFS_v4.06.tar.gz /tmp/
+RUN cd /tmp && tar zxf FastDFS_v4.06.tar.gz
+RUN cd /tmp/FastDFS && ./make.sh && ./make.sh install
